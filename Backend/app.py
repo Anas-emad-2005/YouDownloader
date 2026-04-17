@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, jsonify
 import yt_dlp
 import os
 
-frontend_path = os.path.abspath("../Frontend")
+# تحديد المسارات الأساسية
+base_dir = os.path.dirname(os.path.abspath(__file__))
+frontend_path = os.path.abspath(os.path.join(base_dir, "../Frontend"))
 
 app = Flask(__name__, 
             template_folder=frontend_path, 
@@ -19,11 +21,16 @@ def fetch_info():
     if not video_url:
         return jsonify({"error": "يرجى إدخال الرابط"}), 400
 
-    # إعدادات متقدمة لجلب كل الجودات
+    # مسار ملف الكوكيز داخل مجلد Backend
+    cookies_path = os.path.join(base_dir, "cookies.txt")
+
+    # إعدادات متقدمة لتخطي الحظر وجلب الجودات
     ydl_opts = {
         'quiet': True, 
         'no_warnings': True,
-        'listformats': True # يسمح باستخراج قائمة كاملة
+        'listformats': True,
+        'cookiefile': cookies_path, # استخدام ملف الكوكيز لتجنب رسالة (Sign in to confirm)
+        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
 
     try:
@@ -36,14 +43,13 @@ def fetch_info():
                 "formats": []
             }
 
-            # تصفية الجودات الفريدة لضمان عدم التكرار
+            # تصفية الجودات الفريدة
             seen_resolutions = set()
             
             for f in info.get('formats', []):
-                # نركز على صيغة mp4 أو الجودات التي لها قيمة 'height' (دقة)
                 res = f.get('height')
+                # نختار الصيغ التي تحتوي على فيديو وصوت معاً (أو نعتمد على جلب الرابط المباشر)
                 if res and res not in seen_resolutions:
-                    # إضافة الجودة للقائمة
                     data['formats'].append({
                         "quality": f"{res}p",
                         "url": f.get('url'),
@@ -56,10 +62,11 @@ def fetch_info():
             
             # رابط الصوت (أفضل جودة صوت متاحة)
             audio_formats = [f for f in info.get('formats', []) if f.get('vcodec') == 'none']
-            data['audio_url'] = audio_formats[-1].get('url') if audio_formats else info.get('url')
+            data['audio_url'] = audio_formats[-1].get('url') if audio_formats else None
             
             return jsonify(data)
     except Exception as e:
+        # إرجاع رسالة خطأ واضحة في حال فشل الاتصال
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
