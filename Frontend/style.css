@@ -1,0 +1,99 @@
+body {
+    background: radial-gradient(circle, #1a1a1a 0%, #000000 100%);
+    color: #ffffff;
+    margin: 0;
+}
+
+.main-box {
+    background-color: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 24px;
+    max-width: 700px; /* تم توسيع المربع */
+    width: 100%;
+    text-align: center;
+}
+
+/* جعل البليس هولد أبيض وواضح */
+.custom-placeholder::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+    opacity: 1;
+}
+
+.form-control {
+    background-color: #2c2c2c !important;
+    border: 1px solid #444 !important;
+    color: white !important;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+/* جودات متنوعة بخط أبيض */
+.quality-item {
+    background: #2c2c2c;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #444;
+    color: white !important; /* خط أبيض للجودات */
+}
+
+.quality-item:hover {
+    border-color: #ff0000;
+    background: #333;
+}
+
+.quality-item input {
+    margin-left: 15px;
+    accent-color: #ff0000;
+}
+
+.options-panel {
+    background: #252525;
+    border: 1px solid #333;
+}
+
+.footer-bar {
+    width: 100%;
+    padding: 20px;
+}
+
+.disclaimer {
+    border-top: 1px solid #333;
+    padding-top: 15px;
+}
+
+#videoThumb {
+    width: 100%;
+    max-height: 400px; /* توسيع الصورة أيضاً */
+    object-fit: contain;
+    background: #000;
+}
+
+/* أضف هذا التعديل لقائمة الجودات */
+#qualityOptions {
+    max-height: 200px; /* تحديد طول القائمة */
+    overflow-y: auto; /* إضافة شريط تمرير إذا كانت الجودات كثيرة */
+    padding-right: 5px;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 10px;
+    background: #1a1a1a;
+}
+
+/* تخصيص شكل شريط التمرير (Scrollbar) ليناسب التصميم */
+#qualityOptions::-webkit-scrollbar {
+    width: 5px;
+}
+#qualityOptions::-webkit-scrollbar-thumb {
+    background: #ff0000;
+    border-radius: 10px;
+}
+
+/* التأكد من أن نصوص الجودات بيضاء تماماً */
+.quality-item span {
+    color: #ffffff !important;
+    font-weight: 500;
+}
